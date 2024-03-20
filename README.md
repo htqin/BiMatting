@@ -1,5 +1,5 @@
 # BiMatting: Efficient Video Matting via Binarization
-This project is the official implementation of our accepted NeurIPS 2023 paper *BiMatting: Efficient Video Matting via Binarization* [[PDF]()]. Created by researchers from Beihang University and ETH Zürich.
+This project is the official implementation of our accepted NeurIPS 2023 paper *BiMatting: Efficient Video Matting via Binarization* [[PDF](https://openreview.net/pdf?id=YbYQ0JEQ80)]. Created by researchers from Beihang University and ETH Zürich.
 
 ![loading-ag-172](./imgs/overview.png)
 
