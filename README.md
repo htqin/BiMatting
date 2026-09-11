@@ -1,11 +1,35 @@
 # BiMatting: Efficient Video Matting via Binarization
-This project is the official implementation of our accepted NeurIPS 2023 paper *BiMatting: Efficient Video Matting via Binarization* [[PDF](https://openreview.net/pdf?id=YbYQ0JEQ80)]. Created by researchers from Beihang University and ETH Zürich.
+
+**NeurIPS 2023**
+
+Haotong Qin, Lei Ke, Xudong Ma, Martin Danelljan, Yu-Wing Tai, Chi-Keung Tang, Xianglong Liu, Fisher Yu
+
+[Published paper](https://proceedings.neurips.cc/paper_files/paper/2023/hash/86c070ce724102ee876d1935590e111a-Abstract-Conference.html) | [OpenReview](https://openreview.net/forum?id=YbYQ0JEQ80) | [Citation](#citation)
+
+**BiMatting reduces the cost of video matting with a 1-bit network, using a Shrinkable Binarized Block (SBB) to strengthen the encoder and Sparse-Assisted Binarization (SAB) to reduce redundant decoder computation.** It is a trained video-matting model, requiring the data and training pipeline described in Section 3.4.
+
+## Published results
+
+VM at **512×288** from Table 2. Alpha MAD/MSE are lower-is-better. The reported FLOPs use the paper's binary-operation accounting; model size is parameter storage, not runtime memory.
+
+| Method | Bits | FLOPs (G) | Model size (MB) | Alpha MAD | Alpha MSE |
+| --- | --- | --- | --- | --- | --- |
+| RVM (oracle) | 32 | 4.57 | 14.50 | 6.08 | 1.47 |
+| RVM-DoReFa | 1 | 0.52 | 0.57 | 51.64 | 34.50 |
+| RVM-ReAct | 1 | 0.55 | 0.64 | 28.49 | 18.16 |
+| BiMatting | 1 | 0.37 | 0.67 | 12.82 | 6.65 |
+
+The **12.4× computation and 21.6× storage savings** compare BiMatting with RVM under this accounting; they are not measured wall-clock speedups. BiMatting improves over the binary baselines but still has a numerical accuracy gap to the full-precision RVM oracle.
+
+### What this paper supports
+
+- Direct binarization encounters encoder representation degradation and redundant decoding computation (Section 3.1).
+- SBB improves the binarized encoder through the proposed dense/shrinkable block design (Section 3.2; Table 1).
+- SAB reduces low-information decoder computation through sparsity (Section 3.3; Table 1).
+- The proposed design improves alpha-matting accuracy over the evaluated 1-bit baselines across VM, D646, and AIM (Table 2).
+- High-resolution performance is evaluated separately, including VM at 1920×1080 (Table 3); the low-resolution efficiency numbers above should not be transferred to another resolution.
 
 ![loading-ag-172](./imgs/overview.png)
-
-## Introduction
-
-Real-time video matting on edge devices faces significant computational resource constraints, limiting the widespread use of video matting in applications such as online conferences and short-form video production. Binarization is a powerful compression approach that greatly reduces computation and memory consumption by using 1-bit parameters and bitwise operations. However, binarization of the video matting model is not a straightforward process, and our empirical analysis has revealed two primary bottlenecks: severe representation degradation of the encoder and massive redundant computations of the decoder. To address these issues, we propose **BiMatting**, an accurate and efficient video matting model using binarization. Specifically, we construct shrinkable and dense topologies of the binarized encoder block to enhance the extracted representation. We sparsify the binarized units to reduce the low-information decoding computation. Through extensive experiments, we demonstrate that BiMatting outperforms other binarized video matting models, including state-of-the-art (SOTA) binarization methods, by a significant margin. Our approach even performs comparably to the full-precision counterpart in visual quality. Furthermore, BiMatting achieves remarkable savings of 12.4$\times$ and 21.6$\times$ in computation and storage, respectively, showcasing its potential and advantages in real-world resource-constrained scenarios.
 
 ## Dependencies
 
@@ -22,7 +46,9 @@ sh scripts/train.sh
 sh scripts/test.sh
 ```
 
-## Results
+## Repository training-stage records
+
+The following table is retained from the original code release, including its original `VM512x512` label and foreground entries. It is a historical training-stage record, not a transcription of Table 2. Use the published table above for paper-level comparisons; the `paper` row below also differs from the final Table 3 (for example VM dtSSD is 3.25 in the final paper).
 
 |        | VM512x512 |         |          |          |           |         |         | VM1920x1080 |         |          |            |
 |--------|-----------|---------|----------|----------|-----------|---------|---------|-------------|---------|----------|------------|
@@ -36,13 +62,15 @@ sh scripts/test.sh
 
 ## Citation
 
-If you find our work useful in your research, please consider citing:
+Please cite the published paper below. Open paper versions are linked at the top of this README.
 
-```shell
+```bibtex
 @inproceedings{qin2023bimatting,
-    author={Haotong Qin and Lei Ke and Xudong Ma and Martin Danelljan and Yu-Wing Tai and Chi-Keung Tang and Xianglong Liu and Fisher Yu},
-    title={BiMatting: Efficient Video Matting via Binarization},
-    booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
-    year={2023},
+  title = {{BiMatting}: Efficient Video Matting via Binarization},
+  author = {Haotong Qin and Lei Ke and Xudong Ma and Martin Danelljan and Yu-Wing Tai and Chi-Keung Tang and Xianglong Liu and Fisher Yu},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year = {2023},
+  volume = {36},
+  url = {https://proceedings.neurips.cc/paper_files/paper/2023/hash/86c070ce724102ee876d1935590e111a-Abstract-Conference.html}
 }
 ```
